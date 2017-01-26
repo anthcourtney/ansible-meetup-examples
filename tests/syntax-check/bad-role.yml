@@ -1,0 +1,22 @@
+---
+
+- hosts: localhost
+  connection: local
+  become: false
+
+  pre_tasks:
+ 
+  - name: Display the current date and time
+    debug: 
+      msg2: "Started playbook run at {{ ansible_date_time.iso8601 }}"
+    tags:
+      - output-date-time
+
+  roles:
+  - ntp
+
+  post_tasks:
+
+  - name: Display the finishing date and time
+    debug:
+      var: "{{ lookup('date', 'date +%Y%m%d-%H%M%S') }}"

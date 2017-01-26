@@ -1,0 +1,12 @@
+---
+
+- blah
+
+- name: Install ntp
+  package2:
+    name: ntp
+    state: present
+  become: true
+  tags:
+    - ntp
+    - ntp-install
