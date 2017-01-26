@@ -1,0 +1,12 @@
+---
+
+- name: Reduce surface area by stopping unrequired services
+  service:
+    name: "{{ item }}"
+    state: stopped
+    enabled: false
+  with_items:
+    - postfix
+    - rsyslog
+  tags:
+    - hardening

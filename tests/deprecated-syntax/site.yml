@@ -1,0 +1,17 @@
+---
+
+- hosts: localhost
+  connection: local
+  sudo: false
+
+  vars:
+    people:
+      - Anth
+      - Adam
+
+  tasks:
+
+  - name: Say hello
+    debug:
+      msg: "Hello {{ item }}"
+    with_items: people

@@ -1,0 +1,19 @@
+---
+
+- name: First playbook
+  hosts: all
+  gather_facts: no
+  any_errors_fatal: false
+
+  tasks:
+
+  - ping:
+
+- name: Second playbook
+  hosts: all
+  gather_facts: true  
+
+  tasks:
+
+  - debug:
+      msg: "Started second playbook"

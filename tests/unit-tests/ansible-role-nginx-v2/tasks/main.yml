@@ -1,0 +1,50 @@
+---
+
+- name: Install epel repository
+  package:
+    name: epel-release
+    state: present
+  tags:
+    - nginx
+    - nginx-install
+
+- name: Install nginx
+  package:
+    name: nginx
+    state: present
+  tags:
+    - nginx
+    - nginx-install
+
+- name: Verify that nginx is installed
+  stat:
+    path: /sbin/nginx
+  register: ut_nginx_install
+  failed_when: not ut_nginx_install.stat.exists
+  changed_when: false
+  tags:
+    - nginx
+    - nginx-unit-tests
+    - unit-tests
+
+- name: Ensure nginx is started
+  service:
+    name: nginx
+    state: started
+    enabled: true
+  tags:
+    - nginx
+    - nginx-service
+
+- name: Verify that nginx is started
+  command: systemctl status nginx
+  register: ut_nginx_status
+  failed_when: "'Active: active (running)' not in ut_nginx_status.stdout"
+  changed_when: false
+  tags:
+    - nginx
+    - nginx-unit-tests
+    - unit-tests
+
+- include: config.yml
+- include: htpasswd.yml

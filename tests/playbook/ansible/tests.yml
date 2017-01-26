@@ -1,0 +1,50 @@
+---
+
+- hosts: all
+  become: true
+
+  tasks:
+
+  - name: Check that custom nginx configuration files exist
+    stat:
+      path: "{{ item }}"
+    register: nginx_config
+    with_items:
+      - "/etc/nginx/default.d/status.conf"
+      - "/etc/nginx/default.d/auth.conf"
+
+  - name: Fail if custom nginx configuration files do not exist
+    fail:
+      msg: "Custom nginx configuration file: {{ item.item }} not found"
+    when: not item.stat.exists
+    with_items: "{{ nginx_config.results }}"
+
+  - name: Check that nginx is running
+    service:
+      name: nginx
+      state: started
+
+  - name: Wait for nginx to become available
+    wait_for:
+      host: "{{ ansible_fqdn }}"
+      port: 80
+
+  - name: Test connection to nginx
+    uri:
+      url: "http://{{ ansible_fqdn }}"
+      status_code: 200
+
+  - name: Check that ntpd is running
+    service:
+      name: ntpd
+      state: started
+
+  - name: Check that /etc/hosts contains an entry for our host
+    command: grep -c '{{ ansible_fqdn }}' /etc/hosts
+    register: etc_hosts
+    changed_when: false
+
+  - name: Error out if /etc/hosts does not contain an entry for our host
+    fail:
+      msg: "No entry in /etc/hosts for hostname: {{ ansible_fqdn }}"
+    when: etc_hosts.stdout|int == 0

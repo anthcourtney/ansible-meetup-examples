@@ -1,0 +1,27 @@
+---
+
+- hosts: localhost
+  become: true
+
+  tasks:
+
+  - name: Ensure auditd is running
+    service:
+      name: auditd
+      state: started
+      enabled: true
+
+  - name: Configure auditd to log to file
+    lineinfile:
+      dest: /etc/audit/auditd.conf
+      line: "log_file = /var/log/audit/audit.log"
+      regexp: "^log_file = "
+      state: present
+    notify: Restart auditd
+
+  handlers:
+
+  - name: Restart auditd
+    service:
+      name: auditd
+      state: restarted

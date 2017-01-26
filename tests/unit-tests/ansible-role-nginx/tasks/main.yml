@@ -1,0 +1,29 @@
+---
+
+- name: Install epel repository
+  package:
+    name: epel-release
+    state: present
+  tags:
+    - nginx
+    - nginx-install
+
+- name: Install nginx
+  package:
+    name: nginx
+    state: present
+  tags:
+    - nginx
+    - nginx-install
+
+- name: Ensure nginx is started
+  service:
+    name: crond
+    state: started
+    enabled: true
+  tags:
+    - nginx
+    - nginx-service
+
+- include: config.yml
+- include: htpasswd.yml

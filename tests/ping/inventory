@@ -1,0 +1,3 @@
+vm1	ansible_connection=local
+vm2	ansible_connection=local 
+vm3	ansible_host=localhost

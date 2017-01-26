@@ -1,0 +1,23 @@
+---
+
+- hosts: localhost
+  connection: local
+  gather_facts: no
+
+  vars:
+    data:
+    - name: anth
+      car: yaris
+      watch: sundial
+    - name: adam
+      car: audi
+      watch: rolex
+    results: "{{ data | selectattr('watch','equalto','rolex') | map(attribute='name') | list }}"
+    assertion: 
+      - "'adam' in results"
+      - "results|length == 1"
+
+  tasks:
+
+  - assert:
+      that: assertion

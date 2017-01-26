@@ -1,0 +1,16 @@
+---
+
+- name: Ensure postfix is installed
+  package:
+    name: postfix
+    state: present
+  tags:
+    - postfix
+
+- name: Start postfix
+  service:
+    name: postfix
+    state: started
+    enabled: true
+  tags:
+    - postfix
